@@ -16,9 +16,9 @@ public interface MonitorRepository extends CrudRepository<Monitor, String>
 {
     @Query(" SELECT m " +
             "FROM Monitor m " +
-            "WHERE ((m.state = com.codeaim.urlcheck.scheduler.model.State.WAITING " +
+            "WHERE ((m.state = com.codeaim.urlcheck.monitor.model.State.WAITING " +
             "           AND m.audit <= :currentDate) " +
-            "       OR (m.state = com.codeaim.urlcheck.scheduler.model.State.ELECTED " +
+            "       OR (m.state = com.codeaim.urlcheck.monitor.model.State.ELECTED " +
             "           AND m.locked <= :currentDate)) " +
             "   AND ((:isClustered = false) " +
             "       OR (m.confirming = false)" +

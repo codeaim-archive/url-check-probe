@@ -1,5 +1,4 @@
 repositories {
-    mavenLocal()
     mavenCentral()
     maven {
         url "http://repo.spring.io/snapshot"
