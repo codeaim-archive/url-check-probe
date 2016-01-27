@@ -51,6 +51,10 @@ dependencies {
     compile "com.h2database:h2"
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.7'
+}
+
 task buildDocker(type: Docker, dependsOn: build) {
     push = true
     applicationName = jar.baseName
