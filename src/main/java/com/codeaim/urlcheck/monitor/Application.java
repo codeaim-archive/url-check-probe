@@ -50,5 +50,6 @@ public class Application implements CommandLineRunner
         monitorRepository.save(Monitor.builder().userId("gdownes").name("Sky News").url("http://news.sky.com/").interval(1).build());
         monitorRepository.save(Monitor.builder().userId("gdownes").name("The Mirror").url("http://www.mirror.co.uk/news/").interval(1).build());
         monitorRepository.save(Monitor.builder().userId("gdownes").name("Telegraph").url("http://www.telegraph.co.uk/news/").interval(1).build());
+        monitorRepository.save(Monitor.builder().userId("gdownes").name("Telegraph").url("http://www.hydra-cg.com/spec/latest/core/").interval(1).build());
     }
 }
