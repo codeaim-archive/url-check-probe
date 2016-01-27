@@ -1,4 +1,4 @@
-package com.codeaim.urlcheck.monitor.model;
+package com.codeaim.urlcheck.auditor.model;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -14,7 +14,7 @@ public final class MonitorEvent
     private Long monitorId;
     private Long previous;
     private Status status;
-    private String scheduler;
+    private String auditor;
     private int statusCode;
     private long responseTime;
     private boolean changed;
@@ -26,7 +26,7 @@ public final class MonitorEvent
         final Long monitorId,
         final Long previous,
         final Status status,
-        final String scheduler,
+        final String auditor,
         final int statusCode,
         final long responseTime,
         final boolean changed,
@@ -38,7 +38,7 @@ public final class MonitorEvent
         this.monitorId = monitorId;
         this.previous = previous;
         this.status = status;
-        this.scheduler = scheduler;
+        this.auditor = auditor;
         this.statusCode = statusCode;
         this.responseTime = responseTime;
         this.changed = changed;
@@ -68,9 +68,9 @@ public final class MonitorEvent
         return this.status;
     }
 
-    public String getScheduler()
+    public String getAuditor()
     {
-        return this.scheduler;
+        return this.auditor;
     }
 
     public int getStatusCode()
@@ -108,7 +108,7 @@ public final class MonitorEvent
                 ", monitorId='" + monitorId + '\'' +
                 ", previous='" + previous + '\'' +
                 ", status=" + status +
-                ", scheduler='" + scheduler + '\'' +
+                ", auditor='" + auditor + '\'' +
                 ", statusCode=" + statusCode +
                 ", responseTime=" + responseTime +
                 ", changed=" + changed +
@@ -123,7 +123,7 @@ public final class MonitorEvent
         private Long monitorId;
         private Long previous;
         private Status status;
-        private String scheduler;
+        private String auditor;
         private int statusCode;
         private long responseTime;
         private boolean changed;
@@ -147,9 +147,9 @@ public final class MonitorEvent
             return this;
         }
 
-        public Builder scheduler(final String scheduler)
+        public Builder auditor(final String auditor)
         {
-            this.scheduler = scheduler;
+            this.auditor = auditor;
             return this;
         }
 
@@ -184,7 +184,7 @@ public final class MonitorEvent
                 this.monitorId,
                 this.previous,
                 this.status,
-                this.scheduler,
+                this.auditor,
                 this.statusCode,
                 this.responseTime,
                 this.changed,

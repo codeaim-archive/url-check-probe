@@ -1,4 +1,4 @@
-package com.codeaim.urlcheck.monitor.task;
+package com.codeaim.urlcheck.auditor.task;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -15,12 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import com.codeaim.urlcheck.monitor.model.Monitor;
-import com.codeaim.urlcheck.monitor.model.MonitorEvent;
-import com.codeaim.urlcheck.monitor.model.State;
-import com.codeaim.urlcheck.monitor.model.Status;
-import com.codeaim.urlcheck.monitor.repository.MonitorEventRepository;
-import com.codeaim.urlcheck.monitor.repository.MonitorRepository;
+import com.codeaim.urlcheck.auditor.model.Monitor;
+import com.codeaim.urlcheck.auditor.model.MonitorEvent;
+import com.codeaim.urlcheck.auditor.model.State;
+import com.codeaim.urlcheck.auditor.model.Status;
+import com.codeaim.urlcheck.auditor.repository.MonitorEventRepository;
+import com.codeaim.urlcheck.auditor.repository.MonitorRepository;
 
 @Component
 public class StatusAcquisitionTask
@@ -32,10 +32,10 @@ public class StatusAcquisitionTask
     @Autowired
     private MonitorEventRepository monitorEventRepository;
 
-    @Value("${com.codeaim.urlcheck.scheduler.isClustered}")
+    @Value("${com.codeaim.urlcheck.auditor.isClustered}")
     private boolean isClustered;
-    @Value("${com.codeaim.urlcheck.scheduler.name}")
-    private String schedulerName;
+    @Value("${com.codeaim.urlcheck.auditor.name}")
+    private String auditorName;
 
     public void run()
     {
@@ -44,7 +44,7 @@ public class StatusAcquisitionTask
                 .stream()
                 .map(this::markMonitorElected)
                 .map(this::checkAndUpdateMonitor)
-                .forEach(monitor -> log.info("Processing complete for monitor {}", monitor));
+                .forEach(monitor -> log.info("Processing complete for auditor {}", monitor));
     }
 
     private Page<Monitor> getElectableMonitors()
@@ -52,7 +52,7 @@ public class StatusAcquisitionTask
         log.info("Getting electable monitors");
         PageRequest pageRequest = new PageRequest(0, 5, new Sort(Sort.Direction.ASC, "audit"));
         return monitorRepository.findElectable(
-                schedulerName,
+                auditorName,
                 isClustered,
                 now(),
                 pageRequest);
@@ -60,13 +60,13 @@ public class StatusAcquisitionTask
 
     private Monitor markMonitorElected(Monitor monitor)
     {
-        log.info("Marking monitor elected {}", monitor);
+        log.info("Marking auditor elected {}", monitor);
 
         return monitorRepository.save(Monitor
                 .buildFrom(monitor)
                 .state(State.ELECTED)
                 .locked(now().plusMinutes(1))
-                .scheduler(schedulerName)
+                .auditor(auditorName)
                 .build());
     }
 
@@ -86,9 +86,9 @@ public class StatusAcquisitionTask
 
     private MonitorEvent getMonitorCheckEvent(Monitor monitor)
     {
-        log.info("Getting monitor event for monitor {}", monitor);
+        log.info("Getting auditor event for auditor {}", monitor);
         MonitorEvent monitorEvent = requestUrlAndCreateMonitorEvent(monitor);
-        log.info("Received monitor event {}", monitorEvent);
+        log.info("Received auditor event {}", monitorEvent);
         return monitorEvent;
     }
 
@@ -106,7 +106,7 @@ public class StatusAcquisitionTask
                     .builder()
                     .monitorId(monitor.getId())
                     .previous(monitor.getMonitorEventId())
-                    .scheduler(monitor.getScheduler())
+                    .auditor(monitor.getAuditor())
                     .responseTime(System.currentTimeMillis() - startResponseTime)
                     .statusCode(statusCode)
                     .status((statusCode >= 200 && statusCode <= 399) ? Status.UP : Status.DOWN)
@@ -124,7 +124,7 @@ public class StatusAcquisitionTask
 
     private Monitor statusChangeNone(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating monitor {} - No status change", monitor);
+        log.info("Updating auditor {} - No status change", monitor);
 
         return Monitor
                 .buildFrom(monitor)
@@ -137,7 +137,7 @@ public class StatusAcquisitionTask
 
     private Monitor statusChangeConfirmationRequired(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating monitor {} - Status change confirmation required", monitor);
+        log.info("Updating auditor {} - Status change confirmation required", monitor);
 
         return Monitor
                 .buildFrom(monitor)
@@ -150,7 +150,7 @@ public class StatusAcquisitionTask
 
     private Monitor statusChangeConfirmationInconclusive(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating monitor {} - Status change confirmation inconclusive", monitor);
+        log.info("Updating auditor {} - Status change confirmation inconclusive", monitor);
 
         return Monitor
                 .buildFrom(monitor)
@@ -163,7 +163,7 @@ public class StatusAcquisitionTask
 
     private Monitor statusChangeConfirmed(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating monitor {} - Confirmed status change ", monitor);
+        log.info("Updating auditor {} - Confirmed status change ", monitor);
 
         return Monitor
                 .buildFrom(monitor)

@@ -1,4 +1,4 @@
-package com.codeaim.urlcheck.monitor.model;
+package com.codeaim.urlcheck.auditor.model;
 
 public enum Status
 {

@@ -35,7 +35,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 jar {
-    baseName = 'url-check-monitor'
+    baseName = 'url-check-auditor'
     version = '0.0.1'
 }
 

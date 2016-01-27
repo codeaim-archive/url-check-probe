@@ -1,4 +1,4 @@
-package com.codeaim.urlcheck.monitor;
+package com.codeaim.urlcheck.auditor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.codeaim.urlcheck.monitor.model.Monitor;
-import com.codeaim.urlcheck.monitor.repository.MonitorRepository;
+import com.codeaim.urlcheck.auditor.model.Monitor;
+import com.codeaim.urlcheck.auditor.repository.MonitorRepository;
 
 @SpringBootApplication
 @EnableScheduling

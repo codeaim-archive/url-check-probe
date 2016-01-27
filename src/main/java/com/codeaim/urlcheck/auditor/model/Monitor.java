@@ -1,4 +1,4 @@
-package com.codeaim.urlcheck.monitor.model;
+package com.codeaim.urlcheck.auditor.model;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -19,7 +19,7 @@ public final class Monitor
     private String url;
     private State state;
     private Status status;
-    private String scheduler;
+    private String auditor;
     private LocalDateTime updated;
     private LocalDateTime created;
     private LocalDateTime audit;
@@ -37,7 +37,7 @@ public final class Monitor
         final String url,
         final State state,
         final Status status,
-        final String scheduler,
+        final String auditor,
         final LocalDateTime updated,
         final LocalDateTime created,
         final LocalDateTime audit,
@@ -54,7 +54,7 @@ public final class Monitor
         this.url = url;
         this.state = state;
         this.status = status;
-        this.scheduler = scheduler;
+        this.auditor = auditor;
         this.updated = updated;
         this.created = created;
         this.audit = audit;
@@ -101,9 +101,9 @@ public final class Monitor
         return this.status;
     }
 
-    public String getScheduler()
+    public String getAuditor()
     {
-        return this.scheduler;
+        return this.auditor;
     }
 
     public LocalDateTime getUpdated()
@@ -153,7 +153,7 @@ public final class Monitor
             .url(monitor.getUrl())
             .state(monitor.getState())
             .status(monitor.getStatus())
-            .scheduler(monitor.getScheduler())
+            .auditor(monitor.getAuditor())
             .created(monitor.getCreated())
             .audit(monitor.getAudit())
             .locked(monitor.getLocked())
@@ -173,7 +173,7 @@ public final class Monitor
                 ", url='" + url + '\'' +
                 ", state=" + state +
                 ", status=" + status +
-                ", scheduler='" + scheduler + '\'' +
+                ", auditor='" + auditor + '\'' +
                 ", updated=" + updated +
                 ", created=" + created +
                 ", audit=" + audit +
@@ -193,7 +193,7 @@ public final class Monitor
         private String url;
         private State state;
         private Status status;
-        private String scheduler;
+        private String auditor;
         private LocalDateTime created;
         private LocalDateTime audit;
         private LocalDateTime locked;
@@ -243,9 +243,9 @@ public final class Monitor
             return this;
         }
 
-        public Builder scheduler(final String scheduler)
+        public Builder auditor(final String auditor)
         {
-            this.scheduler = scheduler;
+            this.auditor = auditor;
             return this;
         }
 
@@ -295,7 +295,7 @@ public final class Monitor
                 this.url,
                 this.state == null ? State.WAITING : this.state,
                 this.status == null ? Status.UNKNOWN : this.status,
-                this.scheduler,
+                this.auditor,
                 LocalDateTime.now(ZoneOffset.UTC),
                 this.created == null ? LocalDateTime.now(ZoneOffset.UTC) : this.created,
                 this.audit == null ? LocalDateTime.now(ZoneOffset.UTC) : this.audit,

@@ -1,4 +1,4 @@
-package com.codeaim.urlcheck.monitor.task;
+package com.codeaim.urlcheck.auditor.task;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
