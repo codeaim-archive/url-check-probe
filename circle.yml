@@ -7,3 +7,15 @@ machine:
 dependencies:
   override:
     - gradle build
+
+test:
+  override:
+    - gradle test
+
+deployment:
+  hub:
+    branch: master
+    commands:
+          - docker build -t codeaim/url-check-monitor .
+          - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+          - docker push codeaim/url-check-monitor
