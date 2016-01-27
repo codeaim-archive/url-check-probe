@@ -4,5 +4,4 @@ machine:
 
 dependencies:
   override:
-    - docker info
-    - gradle build
+    - gradle build --debug
