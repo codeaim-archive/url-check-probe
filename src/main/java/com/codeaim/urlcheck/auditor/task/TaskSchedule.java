@@ -18,6 +18,8 @@ public class TaskSchedule
     @Autowired
     private StatusAcquisitionTask statusAcquisitionTask;
 
+
+
     @Scheduled(fixedRate = 1000)
     public void StatusAcquisitionTask()
     {
