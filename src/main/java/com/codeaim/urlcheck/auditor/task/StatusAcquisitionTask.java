@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
 
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.codeaim.urlcheck.auditor.model.Monitor;
 import com.codeaim.urlcheck.auditor.model.MonitorEvent;
@@ -97,11 +96,11 @@ public class StatusAcquisitionTask
         try
         {
             long startResponseTime = System.currentTimeMillis();
-            int statusCode = HttpClients
-                    .createDefault()
-                    .execute(new HttpHead(monitor.getUrl()))
-                    .getStatusLine()
-                    .getStatusCode();
+            RestTemplate restTemplate = new RestTemplate();
+            int statusCode = restTemplate
+                .getForEntity(monitor.getUrl(), String.class)
+                .getStatusCode()
+                .value();
             return monitorEventRepository.save(MonitorEvent
                     .builder()
                     .monitorId(monitor.getId())
