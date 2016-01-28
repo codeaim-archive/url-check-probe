@@ -32,9 +32,9 @@ public class StatusAcquisitionTask
     @Autowired
     private MonitorEventRepository monitorEventRepository;
 
-    @Value("${com.codeaim.urlcheck.auditor.isClustered}")
+    @Value("${com.codeaim.urlcheck.auditor.isClustered ?:false}")
     private boolean isClustered;
-    @Value("${com.codeaim.urlcheck.auditor.name}")
+    @Value("${com.codeaim.urlcheck.auditor.name ?:Standalone}")
     private String auditorName;
 
     public void run()
