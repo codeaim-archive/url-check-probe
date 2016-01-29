@@ -35,9 +35,9 @@ public class StatusAcquisitionTask
     @Autowired
     private MonitorEventRepository monitorEventRepository;
 
-    @Value("${com.codeaim.urlcheck.auditor.isClustered ?:false}")
+    @Value("${com.codeaim.urlcheck.auditor.isClustered:false}")
     private boolean isClustered;
-    @Value("${com.codeaim.urlcheck.auditor.name ?:Standalone}")
+    @Value("${com.codeaim.urlcheck.auditor.name:Standalone}")
     private String auditorName;
 
     public void run()
@@ -47,7 +47,7 @@ public class StatusAcquisitionTask
                 .stream()
                 .map(this::markMonitorElected)
                 .map(this::checkAndUpdateMonitor)
-                .forEach(monitor -> log.info("Monitor {} processing complete - {}",monitor.getId(), monitor));
+                .forEach(monitor -> log.info("Monitor {} status acquisition complete - {}",monitor.getId(), monitor));
     }
 
     private Page<Monitor> getElectableMonitors()

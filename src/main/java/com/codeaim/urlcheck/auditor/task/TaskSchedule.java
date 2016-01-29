@@ -12,16 +12,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskSchedule
 {
-    @Autowired
     private static final Logger log = LoggerFactory.getLogger(TaskSchedule.class);
 
     @Autowired
     private StatusAcquisitionTask statusAcquisitionTask;
+    @Autowired
+    private MonitorEventExpiryTask monitorEventExpiryTask;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 2000)
     public void StatusAcquisitionTask()
     {
         log.info("Starting StatusAcquisitionTask {}", LocalDateTime.now(ZoneOffset.UTC));
         statusAcquisitionTask.run();
+        log.info("Completed StatusAcquisitionTask {}", LocalDateTime.now(ZoneOffset.UTC));
+    }
+
+    @Scheduled(fixedRate = 300000)
+    public void MonitorEventExpiryTask()
+    {
+        log.info("Starting MonitorEventExpiryTask {}", LocalDateTime.now(ZoneOffset.UTC));
+        monitorEventExpiryTask.run();
+        log.info("Completed MonitorEventExpiryTask {}", LocalDateTime.now(ZoneOffset.UTC));
     }
 }

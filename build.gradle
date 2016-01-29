@@ -47,4 +47,5 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-hateoas"
     compile "com.h2database:h2"
     compile "org.postgresql:postgresql:9.3-1100-jdbc4"
+    compile "org.springframework.boot:spring-boot-devtools"
 }

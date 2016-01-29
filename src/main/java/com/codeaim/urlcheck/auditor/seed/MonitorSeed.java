@@ -13,7 +13,6 @@ import com.codeaim.urlcheck.auditor.repository.MonitorRepository;
 @Component
 public class MonitorSeed
 {
-    @Autowired
     private static final Logger log = LoggerFactory.getLogger(MonitorSeed.class);
 
     @Autowired
