@@ -11,7 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.codeaim.urlcheck.auditor.model.Monitor;
@@ -43,7 +47,7 @@ public class StatusAcquisitionTask
                 .stream()
                 .map(this::markMonitorElected)
                 .map(this::checkAndUpdateMonitor)
-                .forEach(monitor -> log.info("Processing complete for auditor {}", monitor));
+                .forEach(monitor -> log.info("Monitor {} processing complete - {}",monitor.getId(), monitor));
     }
 
     private Page<Monitor> getElectableMonitors()
@@ -59,7 +63,7 @@ public class StatusAcquisitionTask
 
     private Monitor markMonitorElected(Monitor monitor)
     {
-        log.info("Marking auditor elected {}", monitor);
+        log.info("Monitor {} marking elected - {}", monitor.getId(), monitor);
 
         return monitorRepository.save(Monitor
                 .buildFrom(monitor)
@@ -85,22 +89,16 @@ public class StatusAcquisitionTask
 
     private MonitorEvent getMonitorCheckEvent(Monitor monitor)
     {
-        log.info("Getting auditor event for auditor {}", monitor);
+        log.info("Monitor {} getting monitor event - {}", monitor.getId(), monitor);
         MonitorEvent monitorEvent = requestUrlAndCreateMonitorEvent(monitor);
-        log.info("Received auditor event {}", monitorEvent);
+        log.info("Monitor {} received monitor event - {}", monitor.getId(), monitorEvent);
         return monitorEvent;
     }
 
     public MonitorEvent requestUrlAndCreateMonitorEvent(Monitor monitor)
     {
-        try
-        {
             long startResponseTime = System.currentTimeMillis();
-            RestTemplate restTemplate = new RestTemplate();
-            int statusCode = restTemplate
-                .getForEntity(monitor.getUrl(), String.class)
-                .getStatusCode()
-                .value();
+            int statusCode = requestUrlStatus(monitor);
             return monitorEventRepository.save(MonitorEvent
                     .builder()
                     .monitorId(monitor.getId())
@@ -112,18 +110,34 @@ public class StatusAcquisitionTask
                     .changed(!Objects.equals((statusCode >= 200 && statusCode <= 399) ? Status.UP : Status.DOWN, monitor.getStatus()))
                     .confirmation(monitor.isConfirming())
                     .build());
+    }
+
+    private int requestUrlStatus(Monitor monitor)
+    {
+        try
+        {
+            log.debug("Monitor {} requesting url {}", monitor.getId(), monitor.getUrl());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+
+            return new RestTemplate().exchange(monitor.getUrl(), HttpMethod.GET, new HttpEntity<>("", headers), String.class)
+                    .getStatusCode()
+                    .value();
+        } catch (HttpClientErrorException exception)
+        {
+            log.warn("Monitor {} received http error requesting url {} - {}", monitor.getId(), monitor.getUrl(), exception.getMessage());
+            return exception.getStatusCode().value();
         } catch (Exception exception)
         {
-            return monitorEventRepository.save(MonitorEvent
-                    .builder()
-                    .status(Status.ERROR)
-                    .build());
+            log.error("Monitor {} received exception requesting url {} - {}", monitor.getId(), monitor.getUrl(), exception.getMessage());
+            return 500;
         }
     }
 
     private Monitor statusChangeNone(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating auditor {} - No status change", monitor);
+        log.info("Monitor {} no status change, updating monitor - {}", monitor.getId(), monitor);
 
         return Monitor
                 .buildFrom(monitor)
@@ -136,7 +150,7 @@ public class StatusAcquisitionTask
 
     private Monitor statusChangeConfirmationRequired(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating auditor {} - Status change confirmation required", monitor);
+        log.info("Monitor {} status change confirmation required, updating monitor - {}", monitor.getId(), monitor);
 
         return Monitor
                 .buildFrom(monitor)
@@ -149,7 +163,7 @@ public class StatusAcquisitionTask
 
     private Monitor statusChangeConfirmationInconclusive(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating auditor {} - Status change confirmation inconclusive", monitor);
+        log.info("Monitor {} status change confirmation inconclusive, updating monitor - {}", monitor.getId(), monitor);
 
         return Monitor
                 .buildFrom(monitor)
@@ -162,7 +176,7 @@ public class StatusAcquisitionTask
 
     private Monitor statusChangeConfirmed(Monitor monitor, MonitorEvent monitorEvent)
     {
-        log.info("Updating auditor {} - Confirmed status change ", monitor);
+        log.info("Monitor {} confirmed status change, updating monitor - {}", monitor.getId(), monitor);
 
         return Monitor
                 .buildFrom(monitor)
