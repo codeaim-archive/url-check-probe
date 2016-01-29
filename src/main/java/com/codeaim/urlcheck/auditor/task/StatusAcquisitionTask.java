@@ -39,6 +39,8 @@ public class StatusAcquisitionTask
     private boolean isClustered;
     @Value("${com.codeaim.urlcheck.auditor.name:Standalone}")
     private String auditorName;
+    @Value("${com.codeaim.urlcheck.auditor.task.statusAcquisition.electionSize:10}")
+    private int electionSize;
 
     public void run()
     {
@@ -53,7 +55,7 @@ public class StatusAcquisitionTask
     private Page<Monitor> getElectableMonitors()
     {
         log.info("Getting electable monitors");
-        PageRequest pageRequest = new PageRequest(0, 5, new Sort(Sort.Direction.ASC, "audit"));
+        PageRequest pageRequest = new PageRequest(0, electionSize, new Sort(Sort.Direction.ASC, "audit"));
         return monitorRepository.findElectable(
                 auditorName,
                 isClustered,
