@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.codeaim.urlcheck.auditor.model.Monitor;
 
 @Repository
-public interface MonitorRepository extends CrudRepository<Monitor, String>
+public interface MonitorRepository extends JpaRepository<Monitor, Long>
 {
     @Query(" SELECT m " +
             "FROM Monitor m " +

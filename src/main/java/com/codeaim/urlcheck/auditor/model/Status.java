@@ -4,6 +4,5 @@ public enum Status
 {
     UNKNOWN,
     UP,
-    DOWN,
-    ERROR
+    DOWN
 }
