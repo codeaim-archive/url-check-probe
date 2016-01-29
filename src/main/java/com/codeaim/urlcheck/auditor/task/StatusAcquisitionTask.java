@@ -2,7 +2,9 @@ package com.codeaim.urlcheck.auditor.task;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +44,12 @@ public class StatusAcquisitionTask
     @Value("${com.codeaim.urlcheck.auditor.task.statusAcquisition.electionSize:10}")
     private int electionSize;
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     public void run()
     {
-        getElectableMonitors()
-                .getContent()
+        markMonitorsElected(getElectableMonitors().getContent())
                 .stream()
-                .map(this::markMonitorElected)
                 .map(this::checkAndUpdateMonitor)
                 .forEach(monitor -> log.info("Monitor {} status acquisition complete - {}",monitor.getId(), monitor));
     }
@@ -73,6 +75,22 @@ public class StatusAcquisitionTask
                 .locked(now().plusMinutes(1))
                 .auditor(auditorName)
                 .build());
+    }
+
+    private Collection<Monitor> markMonitorsElected(Collection<Monitor> monitors)
+    {
+        return monitorRepository.save(monitors
+                .stream()
+                .map(monitor -> {
+                    log.info("Monitor {} marking elected - {}", monitor.getId(), monitor);
+                    return Monitor
+                            .buildFrom(monitor)
+                            .state(State.ELECTED)
+                            .locked(now().plusMinutes(1))
+                            .auditor(auditorName)
+                            .build();
+                })
+                .collect(Collectors.toList()));
     }
 
     private Monitor checkAndUpdateMonitor(Monitor monitor)
@@ -123,7 +141,7 @@ public class StatusAcquisitionTask
             HttpHeaders headers = new HttpHeaders();
             headers.add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
 
-            return new RestTemplate().exchange(monitor.getUrl(), HttpMethod.GET, new HttpEntity<>("", headers), String.class)
+            return restTemplate.exchange(monitor.getUrl(), HttpMethod.HEAD, new HttpEntity<>("", headers), String.class)
                     .getStatusCode()
                     .value();
         } catch (HttpClientErrorException exception)

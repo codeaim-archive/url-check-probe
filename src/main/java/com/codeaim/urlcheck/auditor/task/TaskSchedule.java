@@ -22,16 +22,20 @@ public class TaskSchedule
     @Scheduled(fixedRate = 2000)
     public void StatusAcquisitionTask()
     {
+        long startResponseTime = System.currentTimeMillis();
         log.info("Starting StatusAcquisitionTask {}", LocalDateTime.now(ZoneOffset.UTC));
         statusAcquisitionTask.run();
         log.info("Completed StatusAcquisitionTask {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.error("StatusAcquisitionTask time taken: {}", System.currentTimeMillis() - startResponseTime);
     }
 
     @Scheduled(fixedRate = 300000)
     public void MonitorEventExpiryTask()
     {
+        long startResponseTime = System.currentTimeMillis();
         log.info("Starting MonitorEventExpiryTask {}", LocalDateTime.now(ZoneOffset.UTC));
         monitorEventExpiryTask.run();
         log.info("Completed MonitorEventExpiryTask {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.info("MonitorEventExpiryTask time taken: {}", System.currentTimeMillis() - startResponseTime);
     }
 }

@@ -158,7 +158,7 @@ public final class Monitor
             .audit(monitor.getAudit())
             .locked(monitor.getLocked())
             .interval(monitor.getInterval())
-            .version(monitor.getVersion())
+            .version(monitor.getVersion() + 1)
             .confirming(monitor.isConfirming());
     }
 
