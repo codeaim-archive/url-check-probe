@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.codeaim.urlcheck.auditor.model.MonitorEvent;
-import com.codeaim.urlcheck.auditor.repository.MonitorEventRepository;
+import com.codeaim.urlcheck.common.model.MonitorEvent;
+import com.codeaim.urlcheck.common.repository.MonitorEventRepository;
 
 @Component
 public class MonitorEventExpiryTask
