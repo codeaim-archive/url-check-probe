@@ -1,11 +1,15 @@
 repositories {
     mavenCentral()
     maven {
+        url  "http://dl.bintray.com/gdownes/codeaim"
+    }
+    maven {
         url "http://repo.spring.io/snapshot"
     }
     maven {
         url "http://repo.spring.io/milestone"
     }
+
 }
 
 buildscript {
@@ -35,9 +39,11 @@ springBoot {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+version = "0.0.1"
+
 jar {
     baseName = 'url-check-auditor'
-    version = '0.0.1'
+    version = version
 }
 
 dependencies {
@@ -48,4 +54,5 @@ dependencies {
     compile "com.h2database:h2"
     compile "org.postgresql:postgresql:9.3-1100-jdbc4"
     compile "org.springframework.boot:spring-boot-devtools"
+    compile "com.codeaim:url-check-common:0.0.7"
 }

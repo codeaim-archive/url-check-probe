@@ -20,12 +20,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.codeaim.urlcheck.auditor.model.Monitor;
-import com.codeaim.urlcheck.auditor.model.MonitorEvent;
-import com.codeaim.urlcheck.auditor.model.State;
-import com.codeaim.urlcheck.auditor.model.Status;
-import com.codeaim.urlcheck.auditor.repository.MonitorEventRepository;
-import com.codeaim.urlcheck.auditor.repository.MonitorRepository;
+import com.codeaim.urlcheck.common.model.Monitor;
+import com.codeaim.urlcheck.common.model.MonitorEvent;
+import com.codeaim.urlcheck.common.model.State;
+import com.codeaim.urlcheck.common.model.Status;
+import com.codeaim.urlcheck.common.repository.MonitorEventRepository;
+import com.codeaim.urlcheck.common.repository.MonitorRepository;
 
 @Component
 public class StatusAcquisitionTask
@@ -121,8 +121,8 @@ public class StatusAcquisitionTask
             int statusCode = requestUrlStatus(monitor);
             return monitorEventRepository.save(MonitorEvent
                     .builder()
-                    .monitorId(monitor.getId())
-                    .previous(monitor.getMonitorEventId())
+                    .monitor(monitor)
+                    .previous(monitor.getMonitorEvent())
                     .auditor(monitor.getAuditor())
                     .responseTime(System.currentTimeMillis() - startResponseTime)
                     .statusCode(statusCode)
@@ -161,7 +161,7 @@ public class StatusAcquisitionTask
 
         return Monitor
                 .buildFrom(monitor)
-                .monitorEventId(monitorEvent.getId())
+                .monitorEvent(monitorEvent)
                 .audit(now().plusMinutes(monitor.getInterval()))
                 .state(State.WAITING)
                 .locked(null)
@@ -174,7 +174,7 @@ public class StatusAcquisitionTask
 
         return Monitor
                 .buildFrom(monitor)
-                .monitorEventId(monitorEvent.getId())
+                .monitorEvent(monitorEvent)
                 .confirming(true)
                 .state(State.WAITING)
                 .locked(null)
@@ -187,7 +187,7 @@ public class StatusAcquisitionTask
 
         return Monitor
                 .buildFrom(monitor)
-                .monitorEventId(monitorEvent.getId())
+                .monitorEvent(monitorEvent)
                 .confirming(false)
                 .state(State.WAITING)
                 .locked(null)
@@ -200,7 +200,7 @@ public class StatusAcquisitionTask
 
         return Monitor
                 .buildFrom(monitor)
-                .monitorEventId(monitorEvent.getId())
+                .monitorEvent(monitorEvent)
                 .status(monitorEvent.getStatus())
                 .confirming(false)
                 .audit(now().plusMinutes(monitor.getInterval()))
