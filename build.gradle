@@ -42,7 +42,7 @@ targetCompatibility = 1.8
 version = "0.0.1"
 
 jar {
-    baseName = 'url-check-auditor'
+    baseName = 'url-check-probe'
     version = version
 }
 
@@ -54,5 +54,5 @@ dependencies {
     compile "com.h2database:h2"
     compile "org.postgresql:postgresql:9.3-1100-jdbc4"
     compile "org.springframework.boot:spring-boot-devtools"
-    compile "com.codeaim:url-check-common:0.0.7"
+    compile "com.codeaim:url-check-common:0.0.9"
 }

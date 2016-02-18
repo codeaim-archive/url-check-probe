@@ -16,6 +16,6 @@ deployment:
   hub:
     branch: master
     commands:
-          - docker build -t codeaim/url-check-auditor .
+          - docker build -t codeaim/url-check-probe .
           - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-          - docker push codeaim/url-check-auditor
+          - docker push codeaim/url-check-probe

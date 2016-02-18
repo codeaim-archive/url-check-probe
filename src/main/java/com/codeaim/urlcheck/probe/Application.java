@@ -1,4 +1,4 @@
-package com.codeaim.urlcheck.auditor;
+package com.codeaim.urlcheck.probe;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
