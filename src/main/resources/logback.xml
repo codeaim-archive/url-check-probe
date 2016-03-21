@@ -2,15 +2,22 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+            <pattern>urlcheck: %-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
         </encoder>
     </appender>
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashSocketAppender">
         <host>localhost</host>
         <port>514</port>
     </appender>
+    <appender name="PAPERTRAIL" class="ch.qos.logback.classic.net.SyslogAppender">
+        <syslogHost>logs4.papertrailapp.com</syslogHost>
+        <port>17017</port>
+        <facility>USER</facility>
+        <suffixPattern>urlcheck: %-4relative [%thread] %-5level %logger{35} - %msg %n</suffixPattern>
+    </appender>
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="LOGSTASH" />
+        <appender-ref ref="PAPERTRAIL" />
     </root>
 </configuration>
