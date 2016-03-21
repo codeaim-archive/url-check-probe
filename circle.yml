@@ -14,4 +14,4 @@ deployment:
   staging:
     branch: master
     heroku:
-      appname: urlcheck-probe-01
+      appname: urlcheck-probe
