@@ -6,7 +6,10 @@ import java.time.ZoneOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +21,16 @@ public class TaskSchedule
     private CheckTask checkTask;
     @Autowired
     private ResultExpiryTask resultExpiryTask;
+
+    @Value("${com.codeaim.urlcheck.probe.taskSchedulerPoolSize:2}")
+    private int taskSchedulerPoolSize;
+
+    @Bean
+    public  ThreadPoolTaskScheduler  taskScheduler(){
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.setPoolSize(taskSchedulerPoolSize);
+        return taskScheduler;
+    }
 
     @Scheduled(fixedRate = 2000)
     public void CheckTask()

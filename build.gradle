@@ -40,5 +40,5 @@ dependencies {
     compile "com.h2database:h2"
     compile "org.postgresql:postgresql:9.3-1100-jdbc4"
     compile "org.springframework.boot:spring-boot-devtools"
-    compile "com.codeaim:url-check-common:0.0.9"
+    compile "com.codeaim:url-check-common:0.0.13"
 }

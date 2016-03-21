@@ -45,7 +45,7 @@ public class CheckTask
     public void run()
     {
         markChecksElected(getElectableChecks().getContent())
-                .stream()
+                .parallelStream()
                 .map(this::runAndUpdateCheck)
                 .forEach(check -> log.debug("Check {} complete - {}", check.getId(), check));
     }
