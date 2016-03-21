@@ -27,7 +27,7 @@ public class ResultExpiryTask
     public void run()
     {
         getExpiredResults()
-                .stream()
+                .parallelStream()
                 .map(this::deleteExpiredResult)
                 .forEach(resultId -> log.debug("Result {} expiry complete", resultId));
     }
