@@ -29,7 +29,7 @@ public class ResultExpiryTask
         getExpiredResults()
                 .stream()
                 .map(this::deleteExpiredResult)
-                .forEach(resultId -> log.info("Result {} expiry complete", resultId));
+                .forEach(resultId -> log.debug("Result {} expiry complete", resultId));
     }
 
     private List<Result> getExpiredResults()
@@ -40,7 +40,7 @@ public class ResultExpiryTask
 
     private Long deleteExpiredResult(Result result)
     {
-        log.error("Result {} has expired, deleting result", result.getId());
+        log.debug("Result {} has expired, deleting result", result.getId());
         resultRepository.delete(result);
         return result.getId();
     }

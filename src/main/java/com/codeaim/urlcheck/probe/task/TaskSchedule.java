@@ -23,19 +23,19 @@ public class TaskSchedule
     public void CheckTask()
     {
         long startResponseTime = System.currentTimeMillis();
-        log.info("Starting check task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.debug("Starting check task {}", LocalDateTime.now(ZoneOffset.UTC));
         checkTask.run();
-        log.info("Completed check task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.error("Check task time taken: {}", System.currentTimeMillis() - startResponseTime);
+        log.debug("Completed check task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.debug("Check task time taken: {}", System.currentTimeMillis() - startResponseTime);
     }
 
     @Scheduled(fixedRate = 300000)
     public void ResultExpiryTask()
     {
         long startResponseTime = System.currentTimeMillis();
-        log.info("Starting result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.debug("Starting result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
         resultExpiryTask.run();
-        log.info("Completed result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.info("Result expiry task time taken: {}", System.currentTimeMillis() - startResponseTime);
+        log.debug("Completed result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.debug("Result expiry task time taken: {}", System.currentTimeMillis() - startResponseTime);
     }
 }

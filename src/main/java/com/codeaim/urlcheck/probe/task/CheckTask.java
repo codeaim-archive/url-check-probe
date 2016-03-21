@@ -47,12 +47,12 @@ public class CheckTask
         markChecksElected(getElectableChecks().getContent())
                 .stream()
                 .map(this::runAndUpdateCheck)
-                .forEach(check -> log.info("Check {} complete - {}", check.getId(), check));
+                .forEach(check -> log.debug("Check {} complete - {}", check.getId(), check));
     }
 
     private Page<Check> getElectableChecks()
     {
-        log.info("Getting electable checks");
+        log.debug("Getting electable checks");
         PageRequest pageRequest = new PageRequest(0, electionSize, new Sort(Sort.Direction.ASC, "refresh"));
         return checkRepository.findElectable(
                 probeName,
@@ -66,7 +66,7 @@ public class CheckTask
         return checkRepository.save(checks
                 .stream()
                 .map(check -> {
-                    log.info("Check {} marking elected - {}", check.getId(), check);
+                    log.debug("Check {} marking elected - {}", check.getId(), check);
                     return Check
                             .buildFrom(check)
                             .state(State.ELECTED)
@@ -93,9 +93,9 @@ public class CheckTask
 
     private Result getCheckResult(Check check)
     {
-        log.info("Check {} getting result - {}", check.getId(), check);
+        log.debug("Check {} getting result - {}", check.getId(), check);
         Result result = requestUrlAndCreateResult(check);
-        log.info("Check {} received result - {}", check.getId(), result);
+        log.debug("Check {} received result - {}", check.getId(), result);
         return result;
     }
 
