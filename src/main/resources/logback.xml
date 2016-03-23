@@ -8,6 +8,7 @@
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashSocketAppender">
         <host>${LOGSTASH_HOST:-localhost}</host>
         <port>${LOGSTASH_PORT:-514}</port>
+        <customFields>{"application-name": "${SPRING_APPLICATION_NAME}", "application-dyno": "${DYNO}"}</customFields>
     </appender>
     <appender name="PAPERTRAIL" class="ch.qos.logback.classic.net.SyslogAppender">
         <syslogHost>${PAPERTRAIL_HOST}</syslogHost>
