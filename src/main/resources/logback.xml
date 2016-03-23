@@ -6,8 +6,8 @@
         </encoder>
     </appender>
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashSocketAppender">
-        <host>localhost</host>
-        <port>514</port>
+        <host>${LOGSTASH_HOST:-localhost}</host>
+        <port>${LOGSTASH_PORT:-514}</port>
     </appender>
     <appender name="PAPERTRAIL" class="ch.qos.logback.classic.net.SyslogAppender">
         <syslogHost>logs4.papertrailapp.com</syslogHost>
