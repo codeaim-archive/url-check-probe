@@ -6,14 +6,15 @@
         </encoder>
     </appender>
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashSocketAppender">
-        <host>localhost</host>
-        <port>514</port>
+        <host>${LOGSTASH_HOST:-localhost}</host>
+        <port>${LOGSTASH_PORT:-514}</port>
+        <customFields>{"application-name": "${SPRING_APPLICATION_NAME}", "application-dyno": "${DYNO}"}</customFields>
     </appender>
     <appender name="PAPERTRAIL" class="ch.qos.logback.classic.net.SyslogAppender">
-        <syslogHost>logs4.papertrailapp.com</syslogHost>
-        <port>17017</port>
+        <syslogHost>${PAPERTRAIL_HOST}</syslogHost>
+        <port>${PAPERTRAIL_PORT}</port>
         <facility>USER</facility>
-        <suffixPattern>urlcheck: %-4relative [%thread] %-5level %logger{35} - %msg %n</suffixPattern>
+        <suffixPattern>${SPRING_APPLICATION_NAME} %-4relative [%thread] %-5level %logger{35} - %msg %n</suffixPattern>
     </appender>
     <root level="INFO">
         <appender-ref ref="STDOUT" />
