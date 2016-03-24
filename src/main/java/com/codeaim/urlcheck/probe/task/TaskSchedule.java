@@ -42,7 +42,7 @@ public class TaskSchedule
         log.debug("Starting check task {}", LocalDateTime.now(ZoneOffset.UTC));
         checkTask.run();
         log.debug("Completed check task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.info("Check task time taken: {}", value("task.check.elapsed", System.currentTimeMillis() - startResponseTime));
+        log.info("Check task time taken: {}", value("task-check-elapsed", System.currentTimeMillis() - startResponseTime));
     }
 
     @Scheduled(fixedRate = 300000)
@@ -52,6 +52,6 @@ public class TaskSchedule
         log.debug("Starting result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
         resultExpiryTask.run();
         log.debug("Completed result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.info("Result expiry task time taken: {}", value("task.result_expiry.elapsed", System.currentTimeMillis() - startResponseTime));
+        log.info("Result expiry task time taken: {}", value("task-result-expiry-elapsed", System.currentTimeMillis() - startResponseTime));
     }
 }
