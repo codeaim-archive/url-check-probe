@@ -103,9 +103,9 @@ public class CheckTask
         Result result = requestUrlAndCreateResult(check);
         log.info("Check {} received result {}",
                 keyValue("check.id", check.getId()),
+                keyValue("result.id", result.getId()),
                 keyValue("check.name", check.getName()),
                 keyValue("check.url", check.getUrl()),
-                keyValue("result.id", result.getId()),
                 keyValue("result.response_time", result.getResponseTime()),
                 keyValue("result.status_code", result.getStatusCode()),
                 keyValue("result.probe", result.getProbe()));
