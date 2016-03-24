@@ -1,6 +1,6 @@
 package com.codeaim.urlcheck.probe.task;
 
-import static net.logstash.logback.argument.StructuredArguments.keyValue;
+import static net.logstash.logback.argument.StructuredArguments.value;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class ResultExpiryTask
         getExpiredResults()
                 .parallelStream()
                 .map(this::deleteExpiredResult)
-                .forEach(resultId -> log.info("Result {} expiry complete", keyValue("result.id", resultId)));
+                .forEach(resultId -> log.info("Result {} expiry complete", value("result.id", resultId)));
     }
 
     private List<Result> getExpiredResults()
@@ -43,7 +43,7 @@ public class ResultExpiryTask
 
     private Long deleteExpiredResult(Result result)
     {
-        log.info("Result {} has expired, deleting result", keyValue("result.id", result.getId()));
+        log.info("Result {} has expired, deleting result", value("result.id", result.getId()));
         resultRepository.delete(result);
         return result.getId();
     }

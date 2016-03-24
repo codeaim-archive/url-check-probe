@@ -1,6 +1,7 @@
 package com.codeaim.urlcheck.probe.task;
 
-import static net.logstash.logback.argument.StructuredArguments.keyValue;
+
+import static net.logstash.logback.argument.StructuredArguments.value;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -38,19 +39,19 @@ public class TaskSchedule
     public void CheckTask()
     {
         long startResponseTime = System.currentTimeMillis();
-        log.info("Starting check task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.debug("Starting check task {}", LocalDateTime.now(ZoneOffset.UTC));
         checkTask.run();
-        log.info("Completed check task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.info("Check task time taken: {}", keyValue("task.check.elapsed", System.currentTimeMillis() - startResponseTime));
+        log.debug("Completed check task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.info("Check task time taken: {}", value("task.check.elapsed", System.currentTimeMillis() - startResponseTime));
     }
 
     @Scheduled(fixedRate = 300000)
     public void ResultExpiryTask()
     {
         long startResponseTime = System.currentTimeMillis();
-        log.info("Starting result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.debug("Starting result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
         resultExpiryTask.run();
-        log.info("Completed result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.info("Result expiry task time taken: {}", keyValue("task.result_expiry.elapsed", System.currentTimeMillis() - startResponseTime));
+        log.debug("Completed result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
+        log.info("Result expiry task time taken: {}", value("task.result_expiry.elapsed", System.currentTimeMillis() - startResponseTime));
     }
 }

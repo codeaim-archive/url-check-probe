@@ -5,10 +5,34 @@
             <pattern>urlcheck: %-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
         </encoder>
     </appender>
-    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashSocketAppender">
-        <host>${LOGSTASH_HOST:-localhost}</host>
-        <port>${LOGSTASH_PORT:-514}</port>
-        <customFields>{"application-name": "${SPRING_APPLICATION_NAME}", "application-dyno": "${DYNO}"}</customFields>
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${LOGSTASH_HOST:-localhost}:${LOGSTASH_PORT:-5000}</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <version/>
+                <message/>
+                <loggerName/>
+                <threadName/>
+                <logLevel/>
+                <callerData/>
+                <stackTrace/>
+                <context/>
+                <contextName/>
+                <mdc/>
+                <tags/>
+                <logstashMarkers/>
+                <arguments/>
+                <pattern>
+                    <pattern>
+                        {
+                        "application-name": "${SPRING_APPLICATION_NAME}",
+                        "application-dyno": "${DYNO}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
     </appender>
     <appender name="PAPERTRAIL" class="ch.qos.logback.classic.net.SyslogAppender">
         <syslogHost>${PAPERTRAIL_HOST:-localhost}</syslogHost>
@@ -17,8 +41,8 @@
         <suffixPattern>${SPRING_APPLICATION_NAME} %-4relative [%thread] %-5level %logger{35} - %msg %n</suffixPattern>
     </appender>
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="LOGSTASH" />
-        <appender-ref ref="PAPERTRAIL" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGSTASH"/>
+        <appender-ref ref="PAPERTRAIL"/>
     </root>
 </configuration>
