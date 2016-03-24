@@ -53,7 +53,7 @@ public class CheckTask
         markChecksElected(getElectableChecks().getContent())
                 .parallelStream()
                 .map(this::runAndUpdateCheck)
-                .forEach(check -> log.info("Check {} complete", value("check.id", check.getId())));
+                .forEach(check -> log.info("Check {} complete", value("check-id", check.getId())));
     }
 
     private Page<Check> getElectableChecks()
@@ -72,7 +72,7 @@ public class CheckTask
         return checkRepository.save(checks
                 .stream()
                 .map(check -> {
-                    log.info("Check {} marking elected", value("check.id", check.getId()));
+                    log.info("Check {} marking elected", value("check-id", check.getId()));
                     return Check
                             .buildFrom(check)
                             .state(State.ELECTED)
@@ -99,16 +99,16 @@ public class CheckTask
 
     private Result getCheckResult(Check check)
     {
-        log.info("Check {} getting result", value("check.id", check.getId()));
+        log.info("Check {} getting result", value("check-id", check.getId()));
         Result result = requestUrlAndCreateResult(check);
         log.info("Check {} received result {}",
-                value("check.id", check.getId()),
-                value("result.id", result.getId()),
-                value("check.name", check.getName()),
-                value("check.url", check.getUrl()),
-                value("result.response_time", result.getResponseTime()),
-                value("result.status_code", result.getStatusCode()),
-                value("result.probe", result.getProbe()));
+                value("check-id", check.getId()),
+                value("result-id", result.getId()),
+                value("check-name", check.getName()),
+                value("check-url", check.getUrl()),
+                value("result-response-time", result.getResponseTime()),
+                value("result-status-code", result.getStatusCode()),
+                value("result-probe", result.getProbe()));
         return result;
     }
 
@@ -133,7 +133,7 @@ public class CheckTask
     {
         try
         {
-            log.info("Check {} requesting url {}", value("check.id", check.getId()), value("check.url", check.getUrl()));
+            log.info("Check {} requesting url {}", value("check-id", check.getId()), value("check-url", check.getUrl()));
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
@@ -143,18 +143,18 @@ public class CheckTask
                     .value();
         } catch (HttpClientErrorException exception)
         {
-            log.warn("Check {} received http error requesting url {} - Exception {}", value("check.id", check.getId()), value("check.url", check.getUrl()), value("check.exception", exception.getMessage()));
+            log.warn("Check {} received http error requesting url {} - Exception {}", value("check-id", check.getId()), value("check-url", check.getUrl()), value("check-exception", exception.getMessage()));
             return exception.getStatusCode().value();
         } catch (Exception exception)
         {
-            log.error("Check {} received exception requesting url {} - Exception {}", value("check.url", check.getUrl()), value("check.exception", exception.getMessage()));
+            log.error("Check {} received exception requesting url {} - Exception {}", value("check-id", check.getId()), value("check-url", check.getUrl()), value("check-exception", exception.getMessage()));
             return 500;
         }
     }
 
     private Check statusChangeNone(Check check, Result result)
     {
-        log.info("Check {} no status change, updating check", value("check.id", check.getId()));
+        log.info("Check {} no status change, updating check", value("check-id", check.getId()));
 
         return Check
                 .buildFrom(check)
@@ -167,7 +167,7 @@ public class CheckTask
 
     private Check statusChangeConfirmationRequired(Check check, Result result)
     {
-        log.info("Check {} status change confirmation required, updating check", value("check.id", check.getId()));
+        log.info("Check {} status change confirmation required, updating check", value("check-id", check.getId()));
 
         return Check
                 .buildFrom(check)
@@ -180,7 +180,7 @@ public class CheckTask
 
     private Check statusChangeConfirmationInconclusive(Check check, Result result)
     {
-        log.info("Check {} status change confirmation inconclusive, updating check", value("check.id", check.getId()));
+        log.info("Check {} status change confirmation inconclusive, updating check", value("check-id", check.getId()));
 
         return Check
                 .buildFrom(check)
@@ -193,7 +193,7 @@ public class CheckTask
 
     private Check statusChangeConfirmed(Check check, Result result)
     {
-        log.info("Check {} confirmed status change, updating check", value("check.id", check.getId()));
+        log.info("Check {} confirmed status change, updating check", value("check-id", check.getId()));
 
         return Check
                 .buildFrom(check)
