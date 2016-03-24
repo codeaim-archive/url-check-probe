@@ -1,8 +1,13 @@
 package com.codeaim.urlcheck.probe.task;
 
-import com.codeaim.urlcheck.common.model.*;
-import com.codeaim.urlcheck.common.repository.CheckRepository;
-import com.codeaim.urlcheck.common.repository.ResultRepository;
+import static net.logstash.logback.argument.StructuredArguments.keyValue;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +22,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static net.logstash.logback.argument.StructuredArguments.fields;
+import com.codeaim.urlcheck.common.model.Check;
+import com.codeaim.urlcheck.common.model.Result;
+import com.codeaim.urlcheck.common.model.State;
+import com.codeaim.urlcheck.common.model.Status;
+import com.codeaim.urlcheck.common.repository.CheckRepository;
+import com.codeaim.urlcheck.common.repository.ResultRepository;
 
 @Component
 public class CheckTask
@@ -49,7 +53,7 @@ public class CheckTask
         markChecksElected(getElectableChecks().getContent())
                 .parallelStream()
                 .map(this::runAndUpdateCheck)
-                .forEach(check -> log.info("Check {} complete", check.getId(), fields(check)));
+                .forEach(check -> log.info("Check {} complete", keyValue("check.id", check.getId())));
     }
 
     private Page<Check> getElectableChecks()
@@ -68,7 +72,7 @@ public class CheckTask
         return checkRepository.save(checks
                 .stream()
                 .map(check -> {
-                    log.info("Check {} marking elected", check.getId(), fields(check));
+                    log.info("Check {} marking elected", keyValue("check.id", check.getId()));
                     return Check
                             .buildFrom(check)
                             .state(State.ELECTED)
@@ -95,9 +99,16 @@ public class CheckTask
 
     private Result getCheckResult(Check check)
     {
-        log.info("Check {} getting result", check.getId(), fields(check));
+        log.info("Check {} getting result", keyValue("check.id", check.getId()));
         Result result = requestUrlAndCreateResult(check);
-        log.info("Check {} received result {}", check.getId(), result.getId(), fields(result));
+        log.info("Check {} received result {}",
+                keyValue("check.id", check.getId()),
+                keyValue("check.name", check.getName()),
+                keyValue("check.url", check.getUrl()),
+                keyValue("result.id", result.getId()),
+                keyValue("result.response_time", result.getResponseTime()),
+                keyValue("result.status_code", result.getStatusCode()),
+                keyValue("result.probe", result.getProbe()));
         return result;
     }
 
@@ -122,7 +133,7 @@ public class CheckTask
     {
         try
         {
-            log.info("Check {} requesting url {}", check.getId(), check.getUrl(), fields(check));
+            log.info("Check {} requesting url {}", keyValue("check.id", check.getId()), keyValue("check.url", check.getUrl()));
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
@@ -132,18 +143,18 @@ public class CheckTask
                     .value();
         } catch (HttpClientErrorException exception)
         {
-            log.warn("Check {} received http error requesting url {} - Exception {}", check.getId(), check.getUrl(), exception.getMessage(), fields(check), fields(exception));
+            log.warn("Check {} received http error requesting url {} - Exception {}", keyValue("check.id", check.getId()), keyValue("check.url", check.getUrl()), keyValue("check.exception", exception.getMessage()));
             return exception.getStatusCode().value();
         } catch (Exception exception)
         {
-            log.error("Check {} received exception requesting url {} - Exception {}", check.getId(), check.getUrl(), exception.getMessage(), fields(check), fields(exception));
+            log.error("Check {} received exception requesting url {} - Exception {}", keyValue("check.url", check.getUrl()), keyValue("check.exception", exception.getMessage()));
             return 500;
         }
     }
 
     private Check statusChangeNone(Check check, Result result)
     {
-        log.info("Check {} no status change, updating check", check.getId(), fields(check));
+        log.info("Check {} no status change, updating check", keyValue("check.id", check.getId()));
 
         return Check
                 .buildFrom(check)
@@ -156,7 +167,7 @@ public class CheckTask
 
     private Check statusChangeConfirmationRequired(Check check, Result result)
     {
-        log.info("Check {} status change confirmation required, updating check", check.getId(), fields(check));
+        log.info("Check {} status change confirmation required, updating check", keyValue("check.id", check.getId()));
 
         return Check
                 .buildFrom(check)
@@ -169,7 +180,7 @@ public class CheckTask
 
     private Check statusChangeConfirmationInconclusive(Check check, Result result)
     {
-        log.info("Check {} status change confirmation inconclusive, updating check", check.getId(), fields(check));
+        log.info("Check {} status change confirmation inconclusive, updating check", keyValue("check.id", check.getId()));
 
         return Check
                 .buildFrom(check)
@@ -182,7 +193,7 @@ public class CheckTask
 
     private Check statusChangeConfirmed(Check check, Result result)
     {
-        log.info("Check {} confirmed status change, updating check", check.getId(), fields(check));
+        log.info("Check {} confirmed status change, updating check", keyValue("check.id", check.getId()));
 
         return Check
                 .buildFrom(check)

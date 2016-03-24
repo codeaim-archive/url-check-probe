@@ -1,5 +1,7 @@
 package com.codeaim.urlcheck.probe.task;
 
+import static net.logstash.logback.argument.StructuredArguments.keyValue;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -39,7 +41,7 @@ public class TaskSchedule
         log.info("Starting check task {}", LocalDateTime.now(ZoneOffset.UTC));
         checkTask.run();
         log.info("Completed check task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.info("Check task time taken: {}", System.currentTimeMillis() - startResponseTime);
+        log.info("Check task time taken: {}", keyValue("task.check.elapsed", System.currentTimeMillis() - startResponseTime));
     }
 
     @Scheduled(fixedRate = 300000)
@@ -49,6 +51,6 @@ public class TaskSchedule
         log.info("Starting result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
         resultExpiryTask.run();
         log.info("Completed result expiry task {}", LocalDateTime.now(ZoneOffset.UTC));
-        log.info("Result expiry task time taken: {}", System.currentTimeMillis() - startResponseTime);
+        log.info("Result expiry task time taken: {}", keyValue("task.result_expiry.elapsed", System.currentTimeMillis() - startResponseTime));
     }
 }

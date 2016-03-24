@@ -1,19 +1,20 @@
 package com.codeaim.urlcheck.probe.task;
 
+import static net.logstash.logback.argument.StructuredArguments.keyValue;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-import com.codeaim.urlcheck.common.model.Result;
-import com.codeaim.urlcheck.common.repository.ResultRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static net.logstash.logback.argument.StructuredArguments.fields;
+import com.codeaim.urlcheck.common.model.Result;
+import com.codeaim.urlcheck.common.repository.ResultRepository;
 
 @Component
 public class ResultExpiryTask
@@ -31,7 +32,7 @@ public class ResultExpiryTask
         getExpiredResults()
                 .parallelStream()
                 .map(this::deleteExpiredResult)
-                .forEach(resultId -> log.info("Result {} expiry complete", resultId));
+                .forEach(resultId -> log.info("Result {} expiry complete", keyValue("result.id", resultId)));
     }
 
     private List<Result> getExpiredResults()
@@ -42,7 +43,7 @@ public class ResultExpiryTask
 
     private Long deleteExpiredResult(Result result)
     {
-        log.info("Result {} has expired, deleting result", result.getId(), fields(result));
+        log.info("Result {} has expired, deleting result", keyValue("result.id", result.getId()));
         resultRepository.delete(result);
         return result.getId();
     }
