@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import static net.logstash.logback.argument.StructuredArguments.fields;
+
 @Component
 public class ResultExpiryTask
 {
@@ -29,7 +31,7 @@ public class ResultExpiryTask
         getExpiredResults()
                 .parallelStream()
                 .map(this::deleteExpiredResult)
-                .forEach(resultId -> log.debug("Result {} expiry complete", resultId));
+                .forEach(resultId -> log.info("Result {} expiry complete", resultId));
     }
 
     private List<Result> getExpiredResults()
@@ -40,7 +42,7 @@ public class ResultExpiryTask
 
     private Long deleteExpiredResult(Result result)
     {
-        log.debug("Result {} has expired, deleting result", result.getId());
+        log.info("Result {} has expired, deleting result", result.getId(), fields(result));
         resultRepository.delete(result);
         return result.getId();
     }
