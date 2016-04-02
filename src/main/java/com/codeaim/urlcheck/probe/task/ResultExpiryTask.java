@@ -44,6 +44,11 @@ public class ResultExpiryTask
     private Long deleteExpiredResult(Result result)
     {
         log.info("Result {} has expired, deleting result", value("result-id", result.getId()));
+        resultRepository.save(
+                Result.buildFrom(
+                        resultRepository.findByPrevious(result))
+                        .previous(null)
+                        .build());
         resultRepository.delete(result);
         return result.getId();
     }

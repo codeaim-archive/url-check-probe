@@ -42,7 +42,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-devtools"
     compile "com.h2database:h2"
     compile "org.postgresql:postgresql:9.4.1208"
-    compile "com.codeaim:url-check-common:0.0.16"
+    compile "com.codeaim:url-check-common:0.0.18"
     compile "com.google.guava:guava:19.0"
     compile "net.logstash.logback:logstash-logback-encoder:4.6"
     compile "com.zaxxer:HikariCP:2.4.5"

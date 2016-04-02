@@ -26,8 +26,8 @@
                 <pattern>
                     <pattern>
                         {
-                        "application-name": "${SPRING_APPLICATION_NAME}",
-                        "application-dyno": "${DYNO}"
+                            "application-name": "${SPRING_APPLICATION_NAME}",
+                            "application-dyno": "${DYNO}"
                         }
                     </pattern>
                 </pattern>
