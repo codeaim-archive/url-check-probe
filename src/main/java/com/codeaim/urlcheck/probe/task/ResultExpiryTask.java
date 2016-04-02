@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +45,14 @@ public class ResultExpiryTask
     private Long deleteExpiredResult(Result result)
     {
         log.info("Result {} has expired, deleting result", value("result-id", result.getId()));
-        resultRepository.save(
-                Result.buildFrom(
-                        resultRepository.findByPrevious(result))
-                        .previous(null)
-                        .build());
+
+        Optional<Result> nextResult = resultRepository.findByPrevious(result);
+        if(nextResult.isPresent())
+            resultRepository.save(
+                    Result.buildFrom(nextResult.get())
+                            .previous(null)
+                            .build());
+
         resultRepository.delete(result);
         return result.getId();
     }
